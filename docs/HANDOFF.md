@@ -11,8 +11,8 @@
 
 ### 先做（M0）
 - [ ] 確認 `make` 在使用者的電腦上能編譯（macOS 需要 `brew install sdcc`）
-- [ ] `git init`、做第一次 commit（訊息：`[M0] 專案骨架`）
-- [ ] 建立 GitHub repo 並 push 第一版（先問使用者 repo 名稱與 public / private）
+- [x] `git init`、做第一次 commit（訊息：`[M0] 專案骨架`）→ 8f0ce03
+- [x] 建立 GitHub repo 並 push 第一版（先問使用者 repo 名稱與 public / private）→ 8f0ce03，public：https://github.com/shiropai/tilt-maze-8051
 - [ ] 問使用者 `PROJECT_CONTEXT.md` 第 5 節的「待確認事項」，答案更新到 `inc/board.h` 和 `PROJECT_CONTEXT.md`
   - 最重要的是**晶片型號**：目前程式 4.6 KB，如果是 4 KB flash 的 AT89S51 就要大幅縮減
 - [ ] 問使用者燒錄器怎麼用，若可以用指令燒錄就加 `make flash`

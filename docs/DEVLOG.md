@@ -19,6 +19,23 @@
 
 ---
 
+### 2026-11-20 22:00　[M0] git 初始化、建立 GitHub repo
+- **做了什麼**：
+  - 讀完 CLAUDE.md 與 docs/，向使用者確認進度
+  - `git init`（分支 `main`），第一次 commit `[M0] 專案骨架`，內容就是聊天端 Claude 交付的版本，沒有修改
+  - 用 `gh repo create` 建立 **public** repo：https://github.com/shiropai/tilt-maze-8051 ，並 push
+- **改了哪些檔案**：只有 `docs/DEVLOG.md`、`docs/HANDOFF.md`
+- **編譯結果**：**未編譯**。使用者的 Mac 還沒有 SDCC（已請使用者執行 `brew install sdcc`）
+- **實機測試**：未測
+- **遇到的問題**：無
+- **需要使用者或聊天端 Claude 決定的事**：
+  - repo 名稱使用者沒有指定，暫用資料夾名稱 `tilt-maze-8051`
+  - `PROJECT_CONTEXT.md` 第 5 節的待確認事項都已經問過使用者，但**還沒有回覆**：晶片型號（最重要，4 KB flash 會放不下）、晶振、點矩陣 CS 與左右順序、七段位數、蜂鳴器有源或無源、按鍵腳位、燒錄方式。`board.h` 維持原本的假設值
+- **下一步**：等 SDCC 裝好後執行 `make` 和 `make size` 確認可以編譯 → 收到使用者回覆後更新 `board.h` → M1 實機測試
+- **commit**：8f0ce03（骨架），本筆日誌見下一個 commit
+
+---
+
 ### 2026-11-20 21:40　[M0] 專案骨架建立（由聊天端 Claude 建立）
 - **做了什麼**：
   - 從課堂實驗整理出驅動程式：I2C、MPU6050、OLED（擴充 A~Z 字型、改成 burst 寫入）、MAX7219（點矩陣 ×2 + 七段，共用匯流排）、MCP3202 ADC、組語 delay

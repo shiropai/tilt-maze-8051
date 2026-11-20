@@ -91,12 +91,6 @@ void matrix_flush(void)
     }
 }
 
-void matrix_set_intensity(uint8_t level)
-{
-    level &= 0x0F;
-    matrix_write_both(MAX7219_INTENSITY, level, level);
-}
-
 void seg_write_digit(uint8_t digit, uint8_t value)
 {
     seg_write_reg(digit + 1, value);

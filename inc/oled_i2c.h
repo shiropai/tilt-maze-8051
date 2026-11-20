@@ -17,6 +17,5 @@ void OLED_DisplayString(const char *ptr);
 void OLED_DisplayUInt(uint16_t value, uint8_t digits);   /* 固定位數、補 0 */
 
 void oledSendCommand(uint8_t cmd);
-void oledSendData(uint8_t dat);
 
 #endif

@@ -39,8 +39,8 @@ enum Gscale { GFS_250DPS = 0, GFS_500DPS, GFS_1000DPS, GFS_2000DPS };
 #define readByte(addr, reg)        Single_ReadI2C((addr), (reg))
 
 void    MPU6050_INIT(void);
-void    readMPU6050_AccelData(int *buffer);   /* buffer[0..2] = ax, ay, az */
-void    readMPU6050_GyroData(int *buffer);    /* buffer[0..2] = gx, gy, gz */
-void    resetMPU6050(void);
+/* 遊戲只用 readByte(MPU6050_ADDRESS, ACCEL_XOUT_H / ACCEL_YOUT_H) 讀高位元組。
+ * 4 KB flash 放不下沒用到的函式（SDCC 不會自動移除），所以課堂的
+ * readMPU6050_AccelData / GyroData / resetMPU6050 已刪除，需要時再加回來。 */
 
 #endif

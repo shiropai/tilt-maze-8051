@@ -158,32 +158,6 @@ void uart_puts(const char *s)
         uart_putc(*s++);
 }
 
-/* 不開暫存陣列（省 RAM）：用遞迴會吃堆疊，所以改用除數由大到小 */
-__code static const uint16_t pow10[5] = {10000, 1000, 100, 10, 1};
-
-void uart_put_uint(uint16_t v)
-{
-    uint8_t i, d;
-    __bit started = 0;
-    for (i = 0; i < 5; i++) {
-        d = 0;
-        while (v >= pow10[i]) { v -= pow10[i]; d++; }
-        if (d || started || i == 4) {
-            started = 1;
-            uart_putc((char)('0' + d));
-        }
-    }
-}
-
-void uart_put_int(int16_t v)
-{
-    if (v < 0) {
-        uart_putc('-');
-        v = -v;
-    }
-    uart_put_uint((uint16_t)v);
-}
-
 uint8_t uart_available(void)
 {
     return (uint8_t)((rx_head - rx_tail) & (UART_RX_SIZE - 1));

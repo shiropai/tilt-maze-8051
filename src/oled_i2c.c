@@ -117,8 +117,3 @@ void oledSendCommand(uint8_t cmd)
 {
     Single_WriteI2C(OLED_SlaveAddress, SSD1306_COMMAND, cmd);
 }
-
-void oledSendData(uint8_t dat)
-{
-    Single_WriteI2C(OLED_SlaveAddress, SSD1306_DATA_CONTINUE, dat);
-}

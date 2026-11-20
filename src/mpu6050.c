@@ -22,29 +22,3 @@ void MPU6050_INIT(void)
     writeByte(MPU6050_ADDRESS, INT_PIN_CFG, 0x22);
     writeByte(MPU6050_ADDRESS, INT_ENABLE, 0x00);
 }
-
-static int read16(uint8_t reg_h)
-{
-    uint8_t h = readByte(MPU6050_ADDRESS, reg_h);
-    return (int)(((uint16_t)h << 8) | readByte(MPU6050_ADDRESS, reg_h + 1));
-}
-
-void readMPU6050_AccelData(int *buffer)
-{
-    buffer[0] = read16(ACCEL_XOUT_H);
-    buffer[1] = read16(ACCEL_YOUT_H);
-    buffer[2] = read16(ACCEL_ZOUT_H);
-}
-
-void readMPU6050_GyroData(int *buffer)
-{
-    buffer[0] = read16(GYRO_XOUT_H);
-    buffer[1] = read16(GYRO_YOUT_H);
-    buffer[2] = read16(GYRO_ZOUT_H);
-}
-
-void resetMPU6050(void)
-{
-    writeByte(MPU6050_ADDRESS, PWR_MGMT_1, 0x80);
-    delay_ms(100);
-}

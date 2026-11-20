@@ -26,7 +26,6 @@ extern uint8_t matrix_fb[16];
 void matrix_clear_fb(void);
 void matrix_set_pixel(uint8_t x, uint8_t y);    /* x = 0..15, y = 0..7 */
 void matrix_flush(void);
-void matrix_set_intensity(uint8_t level);   /* 0..15 */
 
 /* 七段：digit = 0..7（0 = 最右邊），value = 0..9 或 SEG_DASH / SEG_BLANK，可 OR SEG_DP */
 void seg_write_digit(uint8_t digit, uint8_t value);

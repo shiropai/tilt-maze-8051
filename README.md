@@ -14,6 +14,7 @@ tilt-maze-8051/
 │   ├── PROJECT_CONTEXT.md    專題規格、腳位、硬體限制、里程碑
 │   ├── HANDOFF.md            聊天端 Claude → Claude Code 的待辦
 │   ├── DEVLOG.md             Claude Code 的開發日誌（聊天端 Claude 讀）
+│   ├── SCHOOL_TEST.md        帶去學校的編譯／硬體測試單
 │   └── CLAUDE_CODE_PROMPT.md 貼給 Claude Code 的提示詞
 ├── inc/                      標頭檔（board.h = 所有腳位）
 ├── src/                      程式碼
@@ -27,7 +28,7 @@ make          # 產生 main.hex
 make size     # 查看 RAM 使用量
 make clean
 ```
-用課堂的燒錄器把 `main.hex` 燒進 8051。
+用課堂的燒錄器把 `main.hex` 燒進 8051。編譯與燒錄都在學校電腦上進行，步驟見 `docs/SCHOOL_TEST.md`。
 
 ## 兩個 Claude 的協作流程
 

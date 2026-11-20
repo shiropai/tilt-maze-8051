@@ -10,15 +10,15 @@
 ## 2026-11-20　第一批：專案啟動（M0 → M1）
 
 ### 先做（M0）
-- [ ] 確認 `make` 在使用者的電腦上能編譯（macOS 需要 `brew install sdcc`）
+- [-] 確認 `make` 在使用者的電腦上能編譯（macOS 需要 `brew install sdcc`）→ 使用者決定編譯／燒錄都在學校電腦做，Mac 不裝 SDCC；改由使用者在學校跑 `make`，結果填 `docs/SCHOOL_TEST.md` 第 0 步
 - [x] `git init`、做第一次 commit（訊息：`[M0] 專案骨架`）→ 8f0ce03
 - [x] 建立 GitHub repo 並 push 第一版（先問使用者 repo 名稱與 public / private）→ 8f0ce03，public：https://github.com/shiropai/tilt-maze-8051
-- [ ] 問使用者 `PROJECT_CONTEXT.md` 第 5 節的「待確認事項」，答案更新到 `inc/board.h` 和 `PROJECT_CONTEXT.md`
+- [ ] 問使用者 `PROJECT_CONTEXT.md` 第 5 節的「待確認事項」，答案更新到 `inc/board.h` 和 `PROJECT_CONTEXT.md`（已問；整理成 `docs/SCHOOL_TEST.md` 第 1 步，等學校回報）
   - 最重要的是**晶片型號**：目前程式 4.6 KB，如果是 4 KB flash 的 AT89S51 就要大幅縮減
 - [ ] 問使用者燒錄器怎麼用，若可以用指令燒錄就加 `make flash`
 
 ### 再做（M1 實機驗證）
-- [ ] 請使用者燒錄目前的 M1 測試版，照下面清單逐項測試，結果記進 DEVLOG：
+- [ ] 請使用者燒錄目前的 M1 測試版，照下面清單逐項測試，結果記進 DEVLOG：（清單已整理成 `docs/SCHOOL_TEST.md` 第 2 步；注意 `buzzer_beep` 第一個參數是音高不是聲數，第 1 項應為「響一聲」）
   1. 開機 OLED 顯示 `TILT MAZE` / `M1 HW TEST`，蜂鳴器響一聲
   2. 電腦開序列埠（9600 baud）收到 `TILT MAZE M1 READY`
   3. 傾斜板子，點矩陣上的點會滾動；碰到邊界有短促聲音

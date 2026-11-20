@@ -19,6 +19,23 @@
 
 ---
 
+### 2026-11-20 22:15　[M0] 新增學校測試單 SCHOOL_TEST.md
+- **做了什麼**：
+  - 使用者說明：**編譯、燒錄、實機測試全部在學校電腦上做**，Mac 不裝 SDCC。所以 Claude Code 之後**無法自己編譯**，每次改程式都只能「靜態檢查」，`make` / `make size` 的結果要靠使用者從學校回報
+  - 新增 `docs/SCHOOL_TEST.md`：第 0 步編譯並記錄 Stack starts at、程式大小；第 1 步硬體待確認事項（晶片、晶振、七段位數、蜂鳴器……附判斷方法）；第 2 步 M1 測試 15 項，每項附預期結果
+  - 核對 `main.c` 後修正 HANDOFF 測試清單的一處描述：`buzzer_beep(half_period, ms)` 第一個參數是**音高**（1 = 2 kHz、2 = 1 kHz、4 = 500 Hz），不是響幾聲。所以開機是響一聲中音，暫停是一聲低音，INT1 是一聲高音
+  - 補充說明：如果七段只有 4 位，左 4 位的 POT 讀值不會顯示
+  - `PROJECT_CONTEXT.md` 第 5 節加註開發環境；第 8 節更新 M0 狀態；README 加上測試單連結
+- **改了哪些檔案**：`docs/SCHOOL_TEST.md`（新）、`docs/PROJECT_CONTEXT.md`、`docs/HANDOFF.md`、`README.md`
+- **編譯結果**：未編譯（本機沒有 SDCC；程式碼沒有改動）
+- **實機測試**：未測，等使用者到學校
+- **遇到的問題**：CLAUDE.md 規定收工前 `make` 要成功，但本機無法編譯。**建議聊天端 Claude 考慮**：要不要調整規則，或請使用者在 Mac 安裝 SDCC 只用來檢查編譯和 RAM（燒錄仍在學校做），這樣 M2 之後改程式比較不會帶著編譯錯誤去學校
+- **需要使用者或聊天端 Claude 決定的事**：同上；以及等學校回報第 1 步（晶片型號最重要）
+- **下一步**：使用者在學校填完 `SCHOOL_TEST.md` → Claude Code 依結果改 `board.h`、修 M1
+- **commit**：見本次 commit
+
+---
+
 ### 2026-11-20 22:00　[M0] git 初始化、建立 GitHub repo
 - **做了什麼**：
   - 讀完 CLAUDE.md 與 docs/，向使用者確認進度

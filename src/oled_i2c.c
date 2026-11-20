@@ -73,7 +73,8 @@ void OLED_DisplayChar(uint8_t ch)
     oled_data_end();
 }
 
-void OLED_DisplayString(const char *ptr)
+/* __code 指標：只接受字串常數，比通用指標小又快（不用 _gptrget） */
+void OLED_DisplayString(__code const char *ptr)
 {
     while (*ptr)
         OLED_DisplayChar((uint8_t)*ptr++);

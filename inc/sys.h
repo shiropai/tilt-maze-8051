@@ -37,7 +37,7 @@ void buzzer_beep(uint8_t half_period, uint16_t duration_ms);
 
 /* ---- UART 9600 8N1 ---- */
 void    uart_putc(char c);
-void    uart_puts(const char *s);
+void    uart_puts(__code const char *s);   /* 只接受字串常數 */
 /* uart_put_uint / uart_put_int 目前沒用到，為了 4 KB flash 先刪除；M6 傳成績時再加回 */
 uint8_t uart_available(void);
 char    uart_getc(void);              /* 沒資料時回傳 0 */

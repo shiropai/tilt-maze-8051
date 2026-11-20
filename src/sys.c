@@ -155,7 +155,9 @@ void uart_putc(char c)
     SBUF = c;
 }
 
-void uart_puts(const char *s)
+/* 參數用 __code 指標（2 bytes），不用通用指標（3 bytes + 連結 _gptrget）。
+ * 只能傳字串常數（存在 flash），不能傳 RAM 裡的陣列。 */
+void uart_puts(__code const char *s)
 {
     while (*s)
         uart_putc(*s++);

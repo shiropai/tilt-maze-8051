@@ -13,7 +13,7 @@ void OLED_Init(void);
 void OLED_Clear(void);
 void OLED_SetCursor(uint8_t lineNumber, uint8_t cursorPosition);
 void OLED_DisplayChar(uint8_t ch);              /* 只支援 font.h 有的字；小寫會轉大寫 */
-void OLED_DisplayString(const char *ptr);
+void OLED_DisplayString(__code const char *ptr);   /* 只接受字串常數 */
 void OLED_DisplayUInt(uint16_t value, uint8_t digits);   /* 固定位數、補 0 */
 
 void oledSendCommand(uint8_t cmd);

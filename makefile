@@ -1,7 +1,10 @@
 # 體感平衡迷宮 — SDCC makefile（沿用課堂實驗的結構）
 #   make        編譯，產生 ./main.hex
 #   make clean  清除 obj/ 和 main.hex
-#   make size   顯示記憶體使用量（RAM 很小，每次加功能都要看）
+#   make size   顯示記憶體使用量：ROM（上限 4096）與 RAM 堆疊起點（不要超過 0x60）
+#
+# 晶片是 AT89S51：4 KB flash、128 B 內部 RAM。LD_FLAG 讓連結器照這個大小檢查，
+# 超過時 make 會直接失敗，不用等到燒錄才發現。
 
 OBJ_DIR=obj
 OBJ_PATH=./obj/
@@ -10,6 +13,7 @@ INC_PATH_FROM_OBJ=./inc
 
 OUTPUT_FLAG=-o ./obj/
 C_FLAG=-I $(INC_PATH_FROM_OBJ) $(CFLAGS_EXTRA)
+LD_FLAG=--code-size 4096 --iram-size 128
 
 CC:=sdcc
 ixh2hex:=packihx
@@ -36,7 +40,7 @@ all:$(ihx_file)
 	@cp $(OBJ_PATH)$(hex_file) .
 
 $(ihx_file):$(cur_obj)
-	cd $(OBJ_PATH) && $(CC) $(main_rel) $(final_rel)
+	cd $(OBJ_PATH) && $(CC) $(LD_FLAG) $(main_rel) $(final_rel)
 
 %.rel: %.c $(inc_path)
 	$(CC) -c $(SRC_PATH_FROM_OBJ)/$*.c $(C_FLAG) $(OUTPUT_FLAG)

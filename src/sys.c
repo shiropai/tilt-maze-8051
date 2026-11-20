@@ -58,6 +58,9 @@ void sys_init(void)
     EA  = 1;
 }
 
+/* 10 的次方表：七段和 OLED 顯示數字共用（用減法取位數，避免連結除法函式庫） */
+__code const uint16_t pow10_tbl[5] = {1, 10, 100, 1000, 10000};
+
 uint16_t sys_ms(void)
 {
     uint16_t t;

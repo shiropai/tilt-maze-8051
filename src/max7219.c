@@ -5,6 +5,7 @@
  * 下一次寫 MAX7219 時會先把舊資料完整推出去，再拉高 CS 鎖存。 */
 #include "board.h"
 #include "max7219.h"
+#include "sys.h"            /* pow10_tbl */
 
 static void bus_send_byte(uint8_t b)
 {
@@ -96,12 +97,16 @@ void seg_write_digit(uint8_t digit, uint8_t value)
     seg_write_reg(digit + 1, value);
 }
 
+/* 不用 / 和 %（會連結函式庫 _divuint / _moduint，約 150 bytes）：
+ * 從最高位開始，用 10 的次方「一直減」算出每一位。超過 width 位的高位會被丟掉。 */
 void seg_show_uint(uint16_t value, uint8_t first_digit, uint8_t width)
 {
-    uint8_t i;
-    for (i = 0; i < width; i++) {
-        seg_write_digit(first_digit + i, (uint8_t)(value % 10));
-        value /= 10;
+    uint8_t k = 5, d;
+    while (k--) {
+        d = 0;
+        while (value >= pow10_tbl[k]) { value -= pow10_tbl[k]; d++; }
+        if (k < width)
+            seg_write_digit(first_digit + k, d);
     }
 }
 

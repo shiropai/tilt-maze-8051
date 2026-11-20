@@ -22,6 +22,9 @@ void uart_isr(void)   __interrupt(4);
 void     sys_init(void);
 uint16_t sys_ms(void);                 /* 開機後的毫秒數（每 65.5 s 溢位一次，用差值比較） */
 
+/* 10 的次方表 {1, 10, 100, 1000, 10000}：取十進位數字用，不用 / 和 % */
+extern __code const uint16_t pow10_tbl[5];
+
 /* ---- 按鍵事件：中斷裡設為 1（已去彈跳），主程式讀完自己清 0 ---- */
 extern volatile __bit evt_pause;
 extern volatile __bit evt_select;

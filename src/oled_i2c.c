@@ -2,6 +2,7 @@
 #include "oled_i2c.h"
 #include "i2c.h"
 #include "font.h"
+#include "sys.h"            /* pow10_tbl */
 
 void OLED_Init(void)
 {
@@ -78,16 +79,14 @@ void OLED_DisplayString(const char *ptr)
         OLED_DisplayChar((uint8_t)*ptr++);
 }
 
-__code static const uint16_t pow10[5] = {10000, 1000, 100, 10, 1};
-
+/* 和 seg_show_uint 一樣用 pow10_tbl 一直減，不用除法 */
 void OLED_DisplayUInt(uint16_t value, uint8_t digits)
 {
-    uint8_t i, d;
-    if (digits > 5) digits = 5;
-    for (i = 0; i < 5; i++) {
+    uint8_t k = 5, d;
+    while (k--) {
         d = 0;
-        while (value >= pow10[i]) { value -= pow10[i]; d++; }
-        if (i >= 5 - digits)
+        while (value >= pow10_tbl[k]) { value -= pow10_tbl[k]; d++; }
+        if (k < digits)
             OLED_DisplayChar((uint8_t)('0' + d));
     }
 }

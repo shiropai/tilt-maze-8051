@@ -10,11 +10,12 @@
 ## 2026-11-20　第一批：專案啟動（M0 → M1）
 
 ### 先做（M0）
-- [-] 確認 `make` 在使用者的電腦上能編譯（macOS 需要 `brew install sdcc`）→ 使用者決定編譯／燒錄都在學校電腦做，Mac 不裝 SDCC；改由使用者在學校跑 `make`，結果填 `docs/SCHOOL_TEST.md` 第 0 步
+- [x] 確認 `make` 在使用者的電腦上能編譯（macOS 需要 `brew install sdcc`）→ 原本決定只在學校編譯；後來為了縮減 flash 在 Mac 裝了 SDCC 4.6.0，`make` 成功、0 警告（見 DEVLOG 2026-11-20 23:30）
 - [x] `git init`、做第一次 commit（訊息：`[M0] 專案骨架`）→ 8f0ce03
 - [x] 建立 GitHub repo 並 push 第一版（先問使用者 repo 名稱與 public / private）→ 8f0ce03，public：https://github.com/shiropai/tilt-maze-8051
-- [ ] 問使用者 `PROJECT_CONTEXT.md` 第 5 節的「待確認事項」，答案更新到 `inc/board.h` 和 `PROJECT_CONTEXT.md`（已問；整理成 `docs/SCHOOL_TEST.md` 第 1 步，等學校回報）
+- [ ] 問使用者 `PROJECT_CONTEXT.md` 第 5 節的「待確認事項」，答案更新到 `inc/board.h` 和 `PROJECT_CONTEXT.md`（已問。晶片 AT89S51、晶振 11.0592 MHz、七段 8 位已確認並更新 → 本次文件 commit；蜂鳴器、點矩陣 CS、按鍵、燒錄方式仍待確認）
   - 最重要的是**晶片型號**：目前程式 4.6 KB，如果是 4 KB flash 的 AT89S51 就要大幅縮減
+    → 確認是 AT89S51；已縮減到 3585 bytes（d30483f、e53daf6、114c63d、326499c、0d9c72b、7d8dea4）
 - [ ] 問使用者燒錄器怎麼用，若可以用指令燒錄就加 `make flash`
 
 ### 再做（M1 實機驗證）

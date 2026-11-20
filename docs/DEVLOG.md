@@ -19,6 +19,43 @@
 
 ---
 
+### 2026-11-20 23:30　[M1] 縮減 flash：4619 → 3585 bytes，可以放進 AT89S51
+- **做了什麼**：使用者確認晶片是 **AT89S51（4 KB flash、128 B RAM）**，原本的程式放不下，所以依照使用者（聊天端 Claude）的清單逐項縮減。每一步都重新 `make` 並各自 commit：
+
+  | 步驟 | ROM（bytes） | 減少 | commit |
+  |---|---:|---:|---|
+  | 起點（SDCC 4.6.0；聊天端用 4.2.0 量到 4653） | 4619 | | |
+  | 1. 刪除沒用到的函式：`readMPU6050_AccelData`、`readMPU6050_GyroData`、`resetMPU6050`、`read16`、`matrix_set_intensity`、`uart_put_int`、`uart_put_uint`、`oledSendData`（都先用 grep 確認沒有被呼叫） | 4076 | −543 | d30483f |
+  | 2. `seg_show_uint` 的 `%`、`/` 改成「10 的次方表一直減」，七段和 OLED 共用 `pow10_tbl`（`sys.c`），不再連結 `_divuint`、`_moduint` | 3933 | −143 | e53daf6 |
+  | 3. `uart_puts`、`OLED_DisplayString` 參數改成 `__code const char *`，不再連結 `_gptrget` | 3840 | −93 | 114c63d |
+  | 4. `OLED_Init`、`MPU6050_INIT` 改成 `__code` 指令表 + 迴圈（送出的指令、順序、延遲都和原本相同） | 3721 | −119 | 326499c |
+  | 5. 字型只保留 M1 用到的 31 個字（44 → 31 字），`font_index` 改成在 `FONT_CHARS` 字串裡找位置；字型 ×5 改成 `(i<<2)+i` 的 8 位元運算 | 3585 | −136 | 0d9c72b |
+  | 6. makefile 加 `--code-size 4096 --iram-size 128`：超過容量時 `make` 會失敗（實際試過 `--code-size 3000`，連結器回報 Insufficient ROM、exit 1） | 3585 | 0 | 7d8dea4 |
+
+  - 第 1 步中，`readMPU6050_*Data` 的 `int *buffer` 指標參數是 `_gptrput` 的來源，刪掉之後它也跟著消失
+  - 「`font_index*5` 會連結 `_mulint`」這點查證後**不成立**：SDCC 已經自動用硬體 `mul ab`，沒有連結 `_mulint`。仍然改成 shift 寫法，因為字型表縮小後索引可以用 8 位元
+  - 現在連結的函式庫只剩 SDCC 啟動碼（crt*，93 bytes），沒有任何算術或指標函式庫
+  - `PROJECT_CONTEXT.md` 第 7 節新增 **Flash 預算**：驅動合計 2030 bytes，遊戲程式可用 2066 bytes，依里程碑分配並保留 236 bytes 餘裕；也列出避免連結函式庫的寫法
+  - 為了能逐步量測，在 Mac 上用 Homebrew 安裝了 **SDCC 4.6.0**（燒錄仍在學校）
+- **改了哪些檔案**：`src/mpu6050.c`、`src/max7219.c`、`src/sys.c`、`src/oled_i2c.c`、`inc/mpu6050.h`、`inc/max7219.h`、`inc/sys.h`、`inc/oled_i2c.h`、`inc/font.h`、`inc/board.h`（只改註解）、`makefile`、`docs/PROJECT_CONTEXT.md`（第 5、6、7、8 節）、`docs/SCHOOL_TEST.md`、`docs/HANDOFF.md`
+- **編譯結果**：成功、0 警告；**ROM 3585 / 4096 bytes**；Stack starts at **0x51**（堆疊剩 47 bytes）
+- **實機測試**：未測。**所有修改都只編譯過**，下列行為需要實機確認：
+  - OLED 初始化（改成查表）、MPU6050 初始化（改成查表）
+  - OLED 字型：`TILT MAZE`、`M1 HW TEST`、`AX:`、`AY:`、`POT:`、`IR:`、`HOLD FLAT...` 都要正常顯示
+  - 七段的數字（改成減法取位數）：右 4 位秒數、左 4 位旋鈕值
+- **行為上的小改變**：
+  - OLED 不再自動把小寫轉大寫，也不再忽略 `\n`。不在 `FONT_CHARS` 裡的字（含小寫）都顯示成空白
+  - `uart_puts`、`OLED_DisplayString` 只能傳字串常數，不能傳 RAM 陣列（M7 從 UART 收到的資料若要顯示，要另外寫逐字輸出）
+- **遇到的問題**：無
+- **需要使用者或聊天端 Claude 決定的事**：
+  - 遊戲只剩約 2 KB，M2 起每個里程碑請依照第 7 節的預算規劃；超過時可以先做預算表最後列出的再縮減項目
+  - `uart_put_uint` 已刪除，M6 要再加回來（已計入預算）
+  - 新增 OLED 文字時記得在 `font.h` 補字（每字 5 bytes）
+- **下一步**：使用者燒錄 M1，照 `docs/SCHOOL_TEST.md` 第 2 步測試
+- **commit**：d30483f、e53daf6、114c63d、326499c、0d9c72b、7d8dea4；文件更新見本次 commit
+
+---
+
 ### 2026-11-20 22:15　[M0] 新增學校測試單 SCHOOL_TEST.md
 - **做了什麼**：
   - 使用者說明：**編譯、燒錄、實機測試全部在學校電腦上做**，Mac 不裝 SDCC。所以 Claude Code 之後**無法自己編譯**，每次改程式都只能「靜態檢查」，`make` / `make size` 的結果要靠使用者從學校回報

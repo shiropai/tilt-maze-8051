@@ -4,26 +4,27 @@
 #include "font.h"
 #include "sys.h"            /* pow10_tbl */
 
+/* 初始化指令表（和課堂版本相同的指令與順序，只是改成查表 + 迴圈，省 flash） */
+__code static const uint8_t oled_init_cmds[] = {
+    0xA8, 0x3F,     /* MUX ratio */
+    0xD3, 0x00,     /* display offset */
+    0x40,           /* start line */
+    0xA1,           /* segment re-map */
+    0xC8,           /* COM scan direction */
+    0xDA, 0x12,
+    0x81, 0x7F,     /* contrast */
+    0xA4,
+    0xA6,           /* normal display */
+    0xD5, 0x80,
+    0x8D, 0x14,     /* charge pump */
+    0xAF,           /* display ON */
+};
+
 void OLED_Init(void)
 {
-    oledSendCommand(0xA8);  /* MUX ratio */
-    oledSendCommand(0x3F);
-    oledSendCommand(0xD3);  /* display offset */
-    oledSendCommand(0x00);
-    oledSendCommand(0x40);  /* start line */
-    oledSendCommand(0xA1);  /* segment re-map */
-    oledSendCommand(0xC8);  /* COM scan direction */
-    oledSendCommand(0xDA);
-    oledSendCommand(0x12);
-    oledSendCommand(0x81);  /* contrast */
-    oledSendCommand(0x7F);
-    oledSendCommand(0xA4);
-    oledSendCommand(0xA6);  /* normal display */
-    oledSendCommand(0xD5);
-    oledSendCommand(0x80);
-    oledSendCommand(0x8D);  /* charge pump */
-    oledSendCommand(0x14);
-    oledSendCommand(0xAF);  /* display ON */
+    uint8_t i;
+    for (i = 0; i < sizeof(oled_init_cmds); i++)
+        oledSendCommand(oled_init_cmds[i]);
     OLED_Clear();
 }
 

@@ -1,0 +1,18 @@
+# 編譯產物
+obj/
+*.hex
+*.ihx
+*.rel
+*.lst
+*.rst
+*.sym
+*.map
+*.mem
+*.lk
+*.asm
+!src/*.asm
+
+# 系統檔
+.DS_Store
+.vscode/
+__pycache__/

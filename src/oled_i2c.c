@@ -1,4 +1,5 @@
-/* oled_i2c.c — 沿用課堂實驗的初始化與游標設定；字元查表改成支援 A~Z */
+/* oled_i2c.c — 沿用課堂實驗的初始化與游標設定。
+ * 改動：初始化改查表、字串用 __code 指標、字元寫入改 burst、字型只放用得到的字（見 font.h） */
 #include "oled_i2c.h"
 #include "i2c.h"
 #include "font.h"
@@ -28,22 +29,16 @@ void OLED_Init(void)
     OLED_Clear();
 }
 
-/* 字元 → font.h 的索引（每字 5 bytes） */
+/* 字元 → font.h 的索引：在 FONT_CHARS 裡找位置，找不到回傳 0（空白）。
+ * 線性搜尋最多約 30 次比較（幾十 us），和 I2C 送一個字（約 2 ms）比起來可以忽略。 */
 static uint8_t font_index(uint8_t ch)
 {
-    if (ch >= 'a' && ch <= 'z') ch -= 32;              /* 小寫轉大寫 */
-    if (ch >= '0' && ch <= '9') return (uint8_t)(ch - '0' + 8);
-    if (ch >= 'A' && ch <= 'Z') return (uint8_t)(ch - 'A' + 18);
-    switch (ch) {
-        case '-': return 1;
-        case ':': return 2;
-        case '.': return 3;
-        case '!': return 4;
-        case '>': return 5;
-        case '<': return 6;
-        case '%': return 7;
-        default:  return 0;                             /* 其他字元顯示空白 */
+    uint8_t i = 0;
+    while (FONT_CHARS[i]) {
+        if ((uint8_t)FONT_CHARS[i] == ch) return i;
+        i++;
     }
+    return 0;
 }
 
 /* 連續寫入（burst）：一次 Start + 位址 + 0x40，後面可以接任意多個資料 byte。
@@ -62,11 +57,10 @@ static void oled_data_end(void)
 
 void OLED_DisplayChar(uint8_t ch)
 {
-    uint8_t i;
-    uint16_t index;
+    uint8_t i, index;
 
-    if (ch == '\n') return;
-    index = (uint16_t)font_index(ch) * 5;
+    index = font_index(ch);
+    index = (uint8_t)((index << 2) + index);            /* × 5，字型表 < 256 bytes，8 位元就夠 */
     oled_data_begin();
     for (i = 0; i < 5; i++)
         I2C_SendByte(OledFontTable[index + i]);
